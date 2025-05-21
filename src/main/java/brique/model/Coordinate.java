@@ -1,4 +1,8 @@
 package brique.model;
 
-public class Coordinate {
+/**
+ * Immutable board coordinate.
+ */
+public record Coordinate(int row, int col) {
+    // Additional helpers or validation can be added here.
 }
