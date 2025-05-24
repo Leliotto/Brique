@@ -1,7 +1,6 @@
 package brique.view;
 
 import brique.controller.GameController;
-import brique.model.Coordinate;
 
 import java.util.Scanner;
 
@@ -23,7 +22,7 @@ public class ConsoleView {
             System.out.printf("%s to move. Enter row col: ", controller.currentPlayer());
             int row = scanner.nextInt();
             int col = scanner.nextInt();
-            controller.play(new Coordinate(row, col));
+            // controller.play(new Coordinate(row, col));
         }
         System.out.println("Game over!");
     }

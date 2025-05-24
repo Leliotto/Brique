@@ -14,9 +14,6 @@ public class GameController {
     public Board board() { return board; }
     public Player currentPlayer() { return currentPlayer; }
 
-    public void play(Coordinate coordinate) {
-        // TODO: validate, update board, toggle player, handle pie rule
-    }
 
     public boolean isGameOver() {
         // TODO: implement win detection
