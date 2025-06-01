@@ -8,8 +8,6 @@ import brique.model.Board;
 
 
 public final class ValidationUtil {
-    private ValidationUtil() {}
-
     public static boolean validMove (Move move, Board board) {
         int[] valid_move = move.toNum();
         if(move.isPieMove()) return true;
@@ -21,36 +19,35 @@ public final class ValidationUtil {
         int last_row = move[0];
         int last_col = move[1];
 
-        if (board.positionIsOf(new int[] {last_row+1, last_col-1}) == last_move.color){ //look to the down-left cell
+        if (board.positionIsOf(new int[] {last_row+1, last_col-1}) == last_move.player()){ //look to the down-left cell
             if ((last_row + last_col)%2 == 0) { //white cell
-                board.setCellColor(new int[] {last_row, last_col-1}, last_move.color);
+                board.setCellColor(new Move (last_row, last_col-1, last_move.player()));
             } else { //black cell
-                board.setCellColor(new int[] {last_row + 1, last_col}, last_move.color);
+                board.setCellColor(new Move( last_row + 1, last_col, last_move.player()));
             }
         }
 
-        if (board.positionIsOf(new int[] {last_row-1, last_col+1}) == last_move.color){ //look to the up-right cell
+        if (board.positionIsOf(new int[] {last_row-1, last_col+1}) == last_move.player()){ //look to the up-right cell
             if ((last_row + last_col)%2 == 0) { //white cell
-                board.setCellColor(new int[] {last_row-1, last_col}, last_move.color);
+                board.setCellColor(new Move( last_row-1, last_col, last_move.player()));
             } else { //black cell
-                board.setCellColor(new int[] {last_row , last_col+1}, last_move.color);
+                board.setCellColor(new Move (last_row , last_col+1, last_move.player()));
             }
         }
     }
 
     public static void escortGrid(Board board) { //for escort the entire grid
-        for (int col = 0; col < board.getSize(); col++){ //white cell
-            for (int row = col%2; row < board.getSize(); row+=2){
+        for (int col = 0; col < board.getSize()[0]; col++){ //white cell
+            for (int row = col%2; row < board.getSize()[1]; row+=2){
                 if(board.positionIsOf(new int[] {row, col}) == board.positionIsOf(new int[] {row+1, col-1})){
-                    board.setCellColor(new int[] {row, col-1}, board.positionIsOf(new int[] {row, col}));
+                    board.setCellColor(new Move( row,  col-1 , board.positionIsOf(new int[] {row, col})));
                 }
             }
         }
-
-        for (int col = 0; col < board.getSize(); col++){ //white cell
-            for (int row = (col+1)%2; row < board.getSize(); row+=2){
+        for (int col = 0; col < board.getSize()[0]; col++){ //white cell
+            for (int row = (col+1)%2; row < board.getSize()[1]; row+=2){
                 if(board.positionIsOf(new int[] {row, col}) == board.positionIsOf(new int[] {row+1, col-1})){
-                    board.setCellColor(new int[] {row+1, col}, board.positionIsOf(new int[] {row, col}));
+                    board.setCellColor(new Move (row+1, col , board.positionIsOf(new int[] {row, col})));
                 }
             }
         }

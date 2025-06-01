@@ -1,20 +1,20 @@
 package brique.model;
 
-public enum Player {
-    BLACK(StoneColor.BLACK),
-    WHITE(StoneColor.WHITE);
-
-    private final StoneColor stoneColor;
-
-    Player(StoneColor stoneColor) {
-        this.stoneColor = stoneColor;
+public class Player {
+    private String name;
+  // Constructors
+    public Player() {
+        this.name = "None";
+    }
+    public Player(String name){
+        this.name = name;
+    }
+    @Override
+    public String toString() {
+        return name;
     }
 
-    public StoneColor stone() {
-        return stoneColor;
-    }
+    public String name() {return name;}
 
-    public Player opponent() {
-        return this == BLACK ? WHITE : BLACK;
-    }
+    public void setName(String name) {this.name = name;}
 }

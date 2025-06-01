@@ -3,22 +3,30 @@ package brique.model;
 import javax.swing.*;
 
 public class Move {
-    public int color; //identified by 1, 2 or 21. first player, second player or pie role.
+    private Player player;
     private int row;
     private int column;
+    private boolean pieMove;
 
-    public Move(int row, int column, char color) {
+    public Move(int row, int column, Player player) {
         this.row = row;
         this.column = column;
-        if (color == 1 || color == 2 || color == 21) {
-            this.color = color;
-        }
-        else { throw new IllegalArgumentException("color invalid, have to be 1 or 2\n"); }
+        this.player = player;
+        this.pieMove = false;
+    }
+    public Move(int row, int column, Player player, boolean pieMove) {
+        this.row = row;
+        this.column = column;
+        this.player = player;
+        this.pieMove = pieMove;
     }
 
     @Override
     public String toString() {
-        return "(" + row + ", " + column + ")" + color;
+        if(pieMove) {
+            return player.name() + "Pie Move";
+        }
+        return "(" + row + ", " + column + ")" + player.name();
     }
 
     public int[] toNum(){
@@ -26,6 +34,9 @@ public class Move {
     }
 
     public boolean isPieMove(){
-        return color == 21;
+        return pieMove;
+    }
+    public Player player(){
+        return player;
     }
 }
