@@ -1,12 +1,8 @@
 package brique.utils;
-// pierules : prendi la board e la mossa appena fatta e modificala con la regola del pie
-// criterio di vincita
-
 import brique.model.Move;
 import brique.model.Board;
 
-
-
+// TODO: sto codice fa veramente schifo. mettilo a posto
 public final class ValidationUtil {
     public static boolean validMove (Move move, Board board) {
         int[] valid_move = move.toNum();
@@ -52,11 +48,4 @@ public final class ValidationUtil {
             }
         }
     }
-/* TODO:
-    public static void pieRoles (Board board, Move move) {
-        if (//move stack have one element && move.isPieMove())
-            board.setCellColor(//first_move, //different color);
-    }*/
-
-
 }

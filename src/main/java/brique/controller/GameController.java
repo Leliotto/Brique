@@ -4,33 +4,59 @@ import brique.model.*;
 
 import java.util.Objects;
 
-/**
- * Orchestrates turns, validates moves and applies game rules (escorts, pie, victory).
+/*
+Orchestrates turns, validates moves and applies game rules (escorts, pie, victory).
  */
 public class GameController {
 
     private Board board = new Board();
     private Player firstPlayer = new Player();
     private Player secondPlayer = new Player(); // Black starts
-    private boolean pieOffered = true;
+    private int waitingTurn = 1; // I'm waiting the move of the n° turn
 
+    public GameController(){} // creation without set players' names
+
+    public GameController(String name1, String name2) {
+        this.firstPlayer = new Player(name1);
+        this.secondPlayer = new Player(name2);
+    }
     public Board board() { return board; }
-    public Player currentPlayer() { return firstPlayer; }
 
+    public Player currentPlayer() {
+        if (waitingTurn%2 == 0) return secondPlayer;
+        return firstPlayer;
+    }
+    public boolean makeMove (Move move) throws UnadmissibleMove {
+        if (move.isPieMove()){
+            if (waitingTurn != 2) throw new UnadmissibleMove("Can't excecuter pie roule int turn " + waitingTurn );
+            board.setCellColor(move);
+            waitingTurn +=1;
+            return true;
+        }
+        if (move.player() == currentPlayer() && positionIsFree(move)){
+            board.setCellColor(move);
+            waitingTurn +=1;
+            return true;
+        }
+        throw new UnadmissibleMove("Player " + (2-waitingTurn%2) + ": "+ move.player().toString() +
+                " can't play in position " + move.toNum() + " in turn " + waitingTurn);
+    }
 
-    public boolean winBoard(Player player, Board board) {
-        try {board = (Board) board.clone();
+    public boolean positionIsFree(Move move) {return board.positionIsFree(move.toNum());}
+
+    public boolean winBoard(Player player) {
+        try { Board new_board = (Board) this.board.clone();
         } catch (CloneNotSupportedException e) { e.printStackTrace(); }
         
         if (player == firstPlayer){
             //il primo giocatore nero vince se si collega il lato superiore con quello inferiore
             //ruotando la griglia torniamo a voler collegare il lato di destra con quello di sinistra
-            board.rotateGrid();
+            new_board.rotateGrid();
         }
         
-        for (int i = 0; i < board.getSize()[0]; i++){
-            if(board.positionIsOf(new int[] {i,0}) == player){
-                return this.isGoalCell(board, new int[] {i,0}, player);
+        for (int i = 0; i < new_board.getSize()[0]; i++){
+            if(new_board.positionIsOf(new int[] {i,0}) == player){
+                return this.isGoalCell(new_board, new int[] {i,0}, player);
             }
         }
     return false;
