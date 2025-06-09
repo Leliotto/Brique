@@ -20,12 +20,27 @@ public class GameController {
         this.firstPlayer = new Player(name1);
         this.secondPlayer = new Player(name2);
     }
+
+    public void reschapeBoard(int dim){
+        board = new Board(dim);
+    }
+
+    public void reschapeBoard(int row, int col){
+        board = new Board(row, col);
+    }
+
     public Board board() { return board; }
 
     public Player currentPlayer() {
         if (waitingTurn%2 == 0) return secondPlayer;
         return firstPlayer;
     }
+
+    public Player previusPlayer(){
+        if (waitingTurn%2 == 1) return secondPlayer;
+        return firstPlayer;
+    }
+
     public boolean makeMove (Move move) throws UnadmissibleMove {
         if (move.isPieMove()){
             if (waitingTurn != 2) throw new UnadmissibleMove("Can't excecuter pie roule int turn " + waitingTurn );
@@ -44,8 +59,13 @@ public class GameController {
 
     public boolean positionIsFree(Move move) {return board.positionIsFree(move.toNum());}
 
+    public boolean winBoard(){
+        return winBoard(this.previusPlayer());
+    }
+
     public boolean winBoard(Player player) {
-        try { Board new_board = (Board) this.board.clone();
+        Board new_board = null;
+        try { new_board = (Board) this.board.clone();
         } catch (CloneNotSupportedException e) { e.printStackTrace(); }
         
         if (player == firstPlayer){
