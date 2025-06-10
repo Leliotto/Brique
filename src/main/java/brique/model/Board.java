@@ -19,6 +19,7 @@ public class Board implements Cloneable {
         this.size1 = size;
         this.size2 = size;
         this.grid = createGrid(size1, size2);
+
     }
 
     public Board() {

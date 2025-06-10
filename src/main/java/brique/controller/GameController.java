@@ -21,11 +21,15 @@ public class GameController {
         this.secondPlayer = new Player(name2);
     }
 
-    public void reschapeBoard(int dim){
+    public int waitingTurn() {
+        return waitingTurn;
+    }
+
+    public void reshapeBoard(int dim){
         board = new Board(dim);
     }
 
-    public void reschapeBoard(int row, int col){
+    public void reshapeBoard(int row, int col){
         board = new Board(row, col);
     }
 
@@ -43,7 +47,10 @@ public class GameController {
 
     public boolean makeMove (Move move) throws UnadmissibleMove {
         if (move.isPieMove()){
-            if (waitingTurn != 2) throw new UnadmissibleMove("Can't excecuter pie roule int turn " + waitingTurn );
+            if (waitingTurn != 2) throw new UnadmissibleMove("Can't excecute pie roule in turn " + waitingTurn );
+            if (board.positionIsOf(move.toNum()) != previusPlayer()){
+                throw new UnadmissibleMove("Can't play pie move in position "+ move.toNum().toString());
+            }
             board.setCellColor(move);
             waitingTurn +=1;
             return true;
