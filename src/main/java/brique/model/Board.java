@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Board implements Cloneable {
 
     private int size1; //height
-    private int size2; //lenght
+    private int size2; //length
     private Player default_player = new Player();
     private Player[][] grid;
 

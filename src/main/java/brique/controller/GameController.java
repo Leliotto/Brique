@@ -71,6 +71,7 @@ public class GameController {
     }
 
     public boolean winBoard(Player player) {
+        // use this function to determinate if the player have win
         Board new_board = null;
         try { new_board = (Board) this.board.clone();
         } catch (CloneNotSupportedException e) { e.printStackTrace(); }
@@ -83,14 +84,17 @@ public class GameController {
         
         for (int i = 0; i < new_board.getSize()[0]; i++){
             if(new_board.positionIsOf(new int[] {i,0}) == player){
-                return this.isGoalCell(new_board, new int[] {i,0}, player);
+                return this.isGoalBoard(new_board, new int[] {i,0}, player);
             }
         }
     return false;
     }
 
-    private boolean isGoalCell(Board board, int[] pos, Player player){ 
-        //here we don't use Move because we are loking if the position is a goal position for the player
+    private boolean isGoalBoard(Board board, int[] pos, Player player){
+
+        // BE CAREFUL: this function modify the board
+
+        //here we use an int[] array instead of Move because we are looking if the position is a goal position for the player
         boolean up, down, left, right;
 
         Movable lambda = (row_ofset, column_ofset, direction) -> {
@@ -102,7 +106,7 @@ public class GameController {
                     board.setCellColor(new Move(row, column, board.getDefaultPlayer()) );
                     //riassegno il valore della cella in maniera che chiamate successive non vadano
                     // a considerare nuovamente quella cella
-                    return isGoalCell(board, new int[] {row, column}, player);
+                    return isGoalBoard(board, new int[] {row, column}, player);
                 } else {
                     return false;
                 }
@@ -118,5 +122,47 @@ public class GameController {
         down = lambda.cellOfPlayer(+1, 0, "down");
 
         return (up || down || left || right);
+    }
+
+    public void escortMove (Move last_move) { //to see if the last move had trigger the escort-rule
+        int[] move = last_move.toNum();
+        int last_row = move[0];
+        int last_col = move[1];
+        try {
+            if (board.positionIsOf(new int[]{last_row + 1, last_col - 1}) == last_move.player()) { //look to the down-left cell
+                if ((last_row + last_col) % 2 == 0) { //white cell
+                    board.setCellColor(new Move(last_row, last_col - 1, last_move.player()));
+                } else { //black cell
+                    board.setCellColor(new Move(last_row + 1, last_col, last_move.player()));
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {}
+
+        try {
+            if (board.positionIsOf(new int[]{last_row - 1, last_col + 1}) == last_move.player()) { //look to the up-right cell
+                if ((last_row + last_col) % 2 == 0) { //white cell
+                    board.setCellColor(new Move(last_row - 1, last_col, last_move.player()));
+                } else { //black cell
+                    board.setCellColor(new Move(last_row, last_col + 1, last_move.player()));
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {}
+    }
+
+    public void escortGrid() { //to escort the entire grid
+        for (int col = 0; col < board.getSize()[0]; col++){ //white cell
+            for (int row = col%2; row < board.getSize()[1]; row+=2){
+                if(board.positionIsOf(new int[] {row, col}) == board.positionIsOf(new int[] {row+1, col-1})){
+                    board.setCellColor(new Move( row,  col-1 , board.positionIsOf(new int[] {row, col})));
+                }
+            }
+        }
+        for (int col = 0; col < board.getSize()[0]; col++){ //white cell
+            for (int row = (col+1)%2; row < board.getSize()[1]; row+=2){
+                if(board.positionIsOf(new int[] {row, col}) == board.positionIsOf(new int[] {row+1, col-1})){
+                    board.setCellColor(new Move (row+1, col , board.positionIsOf(new int[] {row, col})));
+                }
+            }
+        }
     }
 }

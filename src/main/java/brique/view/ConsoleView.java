@@ -31,7 +31,7 @@ public class ConsoleView {
             int row = 0;
             do {
                 System.out.println("Dimension/s");
-                dim = scanner.nextLine().trim().replaceAll("[^a-zA-Z0-9\\s]", " ").split(" ");
+                dim = scanner.nextLine().trim().replaceAll("[^a-zA-Z0-9\\s]", " ").split("\\s+");
                 try {
                     row = Integer.parseInt(dim[0]);
                     if (dim.length > 1) {col = Integer.parseInt(dim[1]);}
@@ -53,7 +53,7 @@ public class ConsoleView {
                 System.out.println("In witch cell player " + controller.currentPlayer().toString() + " will play in turn "+ controller.waitingTurn() +"? " +
                         "\n'pie (row, column)' for a pie move" +
                         "\n'quit' to terminate the game");
-                String[] input = scanner.nextLine().replaceAll("[^a-zA-Z0-9]", " ").trim().split(" ");
+                String[] input = scanner.nextLine().replaceAll("[^a-zA-Z0-9]", " ").trim().split("\\s+");
 
                 int row = -1;
                 int col = -1;
@@ -97,7 +97,7 @@ public class ConsoleView {
                 }
 
             }while (incorrect_move);
-
+            controller.escortMove(move);
             System.out.println(controller.board());
 
         } while (!controller.winBoard());
